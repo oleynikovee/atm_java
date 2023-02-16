@@ -22,7 +22,7 @@ public interface PermittedResources {
 
             "/",
             "/login/",
-            "/black/tel/**"
+            "/user/"
     };
 
     String[] CONSOLE_WHITELIST = {

@@ -15,24 +15,30 @@ import java.util.Random;
 public class DepositService {
     private final DepositRepository repository;
     private final DepositMapper mapper;
+    private final UserService userService;
     private final Random random = new Random();
 
-    public List<Deposit> getAllByAccountId(Integer accountId){
+    public List<Deposit> getAllByAccountId(Integer accountId,String password){
+        userService.isCurrentUser(accountId,password);
         return mapper.toModels(repository.getAllByAccountId(accountId));
     }
 
-    public List<Deposit> getAllByAccountIdAndAmountOfMoneyGreaterThan(Integer accountId, Integer amountOfMoney){
+    public List<Deposit> getAllByAccountIdAndAmountOfMoneyGreaterThan(Integer accountId, Integer amountOfMoney,String password){
+        userService.isCurrentUser(accountId,password);
         return mapper.toModels(repository.getAllByAccountIdAndAmountOfMoneyGreaterThan(accountId, amountOfMoney));
     }
 
-    public List<Deposit> getAllByAccountIdAndAmountOfMoneyLessThan(Integer accountId, Integer amountOfMoney){
+    public List<Deposit> getAllByAccountIdAndAmountOfMoneyLessThan(Integer accountId, Integer amountOfMoney,String password){
+        userService.isCurrentUser(accountId,password);
         return mapper.toModels(repository.getAllByAccountIdAndAmountOfMoneyLessThan(accountId, amountOfMoney));
     }
 
-    public Deposit getByAccountIdAndId(Integer accountId, Integer id){
+    public Deposit getByAccountIdAndId(Integer accountId, Integer id,String password){
+        userService.isCurrentUser(accountId,password);
         return mapper.toModel(repository.getByAccountIdAndId(accountId,id));
     }
-    public Integer doDeposit(Deposit deposit){
+    public Integer doDeposit(Deposit deposit,String password){
+        userService.isCurrentUser(deposit.getAccountId(),password);
         int id = 0;
         while (repository.existsById(id)) {
             id = idGenerator();

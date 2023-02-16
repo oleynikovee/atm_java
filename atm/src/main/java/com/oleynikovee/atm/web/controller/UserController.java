@@ -8,16 +8,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.oleynikovee.atm.config.Constants.API_KEY;
+import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasRole;
 
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
-@RolesAllowed("ADMIN")
 @Tag(name = "User manager", description = "Provides access to user management. Admin only!")
 public class UserController {
     private final UserService userService;
@@ -25,6 +27,7 @@ public class UserController {
     @PostMapping(path = "/add")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Adds a new user to the system. Password should be set for new user!")
+    @Secured("ADMIN")
     public ResponseEntity<Integer> addUser(@RequestBody User user) {
         return ResponseEntity.accepted().body(userService.addUser(user));
     }

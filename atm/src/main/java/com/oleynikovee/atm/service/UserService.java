@@ -3,6 +3,8 @@ package com.oleynikovee.atm.service;
 import com.oleynikovee.atm.mapper.UserMapper;
 import com.oleynikovee.atm.model.error.ApplicationException;
 import com.oleynikovee.atm.model.security.User;
+import com.oleynikovee.atm.repo.domain.UserEntity;
+import com.oleynikovee.atm.web.security.ProprietaryPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
@@ -52,12 +54,10 @@ public class UserService {
         repository.deleteById(userId);
     }
 
-    public boolean isCurrentUser(Integer accountId, String password){
-        User user= mapper.toModel(repository.findById(accountId).orElseThrow(()-> ApplicationException.notFound("User")));
-        if(user.getPassword()==password){
-            return true;
-        }else{
-            return false;
+    public void isCurrentUser(Integer accountId, String password){
+        String dbPassword= repository.findById(accountId).map(UserEntity::getPassword).orElseThrow(()-> ApplicationException.notFound("User"));
+        if(!new ProprietaryPasswordEncoder().matches(password,dbPassword) ){
+            throw ApplicationException.badRequest("Wrong password.");
         }
     }
 

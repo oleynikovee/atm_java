@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity(name="deposits")
 public class DepositEntity {
@@ -11,5 +13,5 @@ public class DepositEntity {
     private Integer id;
     private Integer accountId;
     private Integer amountOfMoney;
-    private String date;
+    private LocalDateTime date;
 }

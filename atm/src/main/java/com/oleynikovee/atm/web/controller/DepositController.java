@@ -24,55 +24,39 @@ import static com.oleynikovee.atm.config.Constants.API_KEY;
 public class DepositController {
     private final UserService userService;
     private final DepositService depositService;
+
     @GetMapping(path = "/{accountId}")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Need accountId and password, that was used for creating accountId-> return List of Deposits by id or null if invalid password")
-    public ResponseEntity<List<Deposit>> getAllByAccountId (@RequestBody Integer accountId, @RequestBody String password) {
-        if(userService.isCurrentUser(accountId,password)) {
-            return ResponseEntity.accepted().body(depositService.getAllByAccountId(accountId));
-        }else{
-            return ResponseEntity.accepted().body(null);
-        }
+    public ResponseEntity<List<Deposit>> getAllByAccountId(@RequestParam Integer accountId, @RequestParam String password) {
+        return ResponseEntity.ok(depositService.getAllByAccountId(accountId, password));
     }
+
     @GetMapping(path = "/{accountId}/greater/{amountOfMoney}")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Need accountId and password, that was used for creating accountId-> return List of Deposits where amountOfMoney greater then value was input or null if invalid password")
-    public ResponseEntity<List<Deposit>> getAllByAccountIdAndAmountOfMoneyGreaterThan (@RequestBody Integer accountId,@RequestBody Integer amountOfMoney,@RequestBody String password) {
-        if(userService.isCurrentUser(accountId,password)) {
-            return ResponseEntity.accepted().body(depositService.getAllByAccountIdAndAmountOfMoneyGreaterThan(accountId, amountOfMoney));
-        }else{
-            return ResponseEntity.accepted().body(null);
-        }
+    public ResponseEntity<List<Deposit>> getAllByAccountIdAndAmountOfMoneyGreaterThan(@RequestParam Integer accountId, @RequestParam Integer amountOfMoney, @RequestParam String password) {
+        return ResponseEntity.ok(depositService.getAllByAccountIdAndAmountOfMoneyGreaterThan(accountId, amountOfMoney, password));
     }
+
     @GetMapping(path = "/{accountId}/less/{amountOfMoney}")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Need accountId and password, that was used for creating accountId-> return List of Deposits where amountOfMoney less then value was input or null if invalid password")
-    public ResponseEntity<List<Deposit>> getAllByAccountIdAndAmountOfMoneyLessThan (@RequestBody Integer accountId,@RequestBody Integer amountOfMoney,@RequestBody String password) {
-        if(userService.isCurrentUser(accountId,password)) {
-            return ResponseEntity.accepted().body(depositService.getAllByAccountIdAndAmountOfMoneyLessThan(accountId, amountOfMoney));
-        }else{
-            return ResponseEntity.accepted().body(null);
-        }
+    public ResponseEntity<List<Deposit>> getAllByAccountIdAndAmountOfMoneyLessThan(@RequestParam Integer accountId, @RequestParam Integer amountOfMoney, @RequestParam String password) {
+        return ResponseEntity.ok(depositService.getAllByAccountIdAndAmountOfMoneyLessThan(accountId, amountOfMoney, password));
     }
+
     @GetMapping(path = "/{accountId}/{id}")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Need accountId and id of Deposit, and password, that was used for creating accountId-> return Deposit by id or null if invalid password")
-    public ResponseEntity<Deposit> getByAccountIdAndId (@RequestBody Integer accountId,@RequestBody Integer id, @RequestBody String password) {
-        if(userService.isCurrentUser(accountId,password)) {
-            return ResponseEntity.accepted().body(depositService.getByAccountIdAndId(accountId,id));
-        }else{
-            return ResponseEntity.accepted().body(null);
-        }
+    public ResponseEntity<Deposit> getByAccountIdAndId(@RequestParam Integer accountId, @RequestParam Integer id, @RequestParam String password) {
+        return ResponseEntity.ok(depositService.getByAccountIdAndId(accountId, id, password));
     }
 
     @PutMapping(path = "/{accountId}")
-    @SecurityRequirement(name=API_KEY)
+    @SecurityRequirement(name = API_KEY)
     @Operation(description = "Put your deposit into account using password and query -> return ID")
-    public ResponseEntity<Integer> doDeposit(@RequestBody Deposit deposit, @RequestBody String password){
-        if(userService.isCurrentUser((deposit.getAccountId()),password)) {
-            return ResponseEntity.accepted().body(depositService.doDeposit(deposit));
-        }else{
-            return ResponseEntity.accepted().body(null);
-        }
+    public ResponseEntity<Integer> doDeposit(@RequestBody Deposit deposit, @RequestParam String password) {
+        return ResponseEntity.accepted().body(depositService.doDeposit(deposit, password));
     }
 }

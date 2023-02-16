@@ -23,7 +23,7 @@ import static com.oleynikovee.atm.web.security.PermittedResources.*;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(jsr250Enabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final ProprietaryUserDetailsService service;

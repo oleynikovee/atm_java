@@ -50,6 +50,7 @@ public class AtmApplication implements ApplicationListener<ApplicationReadyEvent
             user.setRole(login.equals("admin") ? UserRole.ADMIN : UserRole.USER);
             user.setLogin(login);
             user.setPassword(login);
+            user.setAmountOfMoney(2312234);
             userService.addUser(user);
             log.info(login.toUpperCase() + " user added");
         }
