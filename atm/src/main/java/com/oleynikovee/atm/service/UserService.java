@@ -1,6 +1,7 @@
 package com.oleynikovee.atm.service;
 
 import com.oleynikovee.atm.mapper.UserMapper;
+import com.oleynikovee.atm.model.Account;
 import com.oleynikovee.atm.model.error.ApplicationException;
 import com.oleynikovee.atm.model.security.User;
 import com.oleynikovee.atm.repo.domain.UserEntity;
@@ -20,22 +21,14 @@ import static java.lang.String.format;
 public class UserService {
     private final UserRepository repository;
     private final UserMapper mapper;
-    private final Random random = new Random();
 
-    public Integer addUser(User user) {
-        if (repository.existsByLogin(user.getLogin())) {
-            throw ApplicationException.badRequest(format("User with login: %s already exists!!!", user.getLogin()));
-        }
-        int id = 0;
-        while (repository.existsById(id)) {
-            id = idGenerator();
-        }
-        user.setId(id);
+
+    public Long addUser(User user) {
         user.setPassword(DigestUtils.md5Hex(user.getPassword()).toLowerCase());
         return repository.save(mapper.toEntity(user)).getId();
     }
 
-    public User getUserById(Integer userId) {
+    public User getUserById(Long userId) {
         User user = mapper.toModel(repository.findById(userId).orElseThrow(() -> ApplicationException.notFound("User")));
         user.setPassword(null);
         return user;
@@ -47,25 +40,16 @@ public class UserService {
         return users;
     }
 
-    public void deleteUser(Integer userId) {
+    public void deleteUser(Long userId) {
         if (!repository.existsById(userId)) {
             throw ApplicationException.notFound("User");
         }
         repository.deleteById(userId);
     }
 
-    public void isCurrentUser(Integer accountId, String password){
-        String dbPassword= repository.findById(accountId).map(UserEntity::getPassword).orElseThrow(()-> ApplicationException.notFound("User"));
-        if(!new ProprietaryPasswordEncoder().matches(password,dbPassword) ){
-            throw ApplicationException.badRequest("Wrong password.");
-        }
-    }
 
     public User getByLogin(String login) {
         return mapper.toModel(repository.findByLogin(login).orElseThrow(()-> ApplicationException.notFound("User")));
     }
 
-    private int idGenerator() {
-        return random.nextInt();
-    }
 }

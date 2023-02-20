@@ -1,69 +1,47 @@
 package com.oleynikovee.atm.web.controller;
 
-import com.oleynikovee.atm.model.Deposit;
-import com.oleynikovee.atm.model.Transaction;
-import com.oleynikovee.atm.model.Withdraw;
-import com.oleynikovee.atm.service.DepositService;
+import com.oleynikovee.atm.model.DepositRequest;
+import com.oleynikovee.atm.model.TransferRequest;
+import com.oleynikovee.atm.model.WithdrawRequest;
+import com.oleynikovee.atm.model.security.UserPrincipal;
 import com.oleynikovee.atm.service.TransactionService;
-import com.oleynikovee.atm.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.oleynikovee.atm.config.Constants.API_KEY;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/api/transaction")
 @RequiredArgsConstructor
 @Tag(name = "Transaction manager", description = "Gives info about transactions on account")
 public class TransactionController {
-    private final UserService userService;
     private final TransactionService transactionService;
-
-    @GetMapping(path = "/{accountId}")
+    private final UserPrincipal loggedUser;
     @SecurityRequirement(name = API_KEY)
-    @Operation(description = "Need accountId and password, that was used for creating accountId-> return List of Transactions by id or null if invalid password")
-    public ResponseEntity<List<Transaction>> getAllByAccountId(@RequestParam Integer accountId, @RequestParam String password) {
-        return ResponseEntity.ok(transactionService.getAllByAccountId(accountId, password));
+    @PostMapping("/withdraw")
+    public String withdraw(@RequestBody WithdrawRequest request) {
+        return transactionService.withdraw(loggedUser.getUserId(), request.getAmount());
     }
 
-    @GetMapping(path = "/{accountId}/greater/{amountOfMoney}")
     @SecurityRequirement(name = API_KEY)
-    @Operation(description = "Need accountId and password, that was used for creating accountId-> return List of Transactions where amountOfMoney greater then value was input or null if invalid password")
-    public ResponseEntity<List<Transaction>> getAllByAccountIdAndAmountOfMoneyGreaterThan(@RequestParam Integer accountId, @RequestParam Integer amountOfMoney, @RequestParam String password) {
-        return ResponseEntity.ok(transactionService.getAllByAccountIdAndAmountOfMoneyGreaterThan(accountId, amountOfMoney, password));
+    @PostMapping("/deposit")
+    public String deposit(@RequestBody DepositRequest request) {
+        return transactionService.deposit(loggedUser.getUserId(), request.getAmount());
     }
 
-    @GetMapping(path = "/{accountId}/less/{amountOfMoney}")
     @SecurityRequirement(name = API_KEY)
-    @Operation(description = "Need accountId and password, that was used for creating accountId-> return List of Transactions where amountOfMoney less then value was input or null if invalid password")
-    public ResponseEntity<List<Transaction>> getAllByAccountIdAndAmountOfMoneyLessThan(@RequestParam Integer accountId, @RequestParam Integer amountOfMoney, @RequestParam String password) {
-        return ResponseEntity.ok(transactionService.getAllByAccountIdAndAmountOfMoneyLessThan(accountId, amountOfMoney, password));
+    @PostMapping("/transfer")
+    public String transfer(@RequestBody TransferRequest request) {
+        return transactionService.transfer(loggedUser.getUserId(), request.getToUserId(), request.getAmount());
+    }
+    @SecurityRequirement(name = API_KEY)
+    @GetMapping("/balance")
+    public ResponseEntity<Double> getBalance() {
+        return ResponseEntity.ok(transactionService.getBalance(loggedUser.getUserId()));
     }
 
-    @GetMapping(path = "/{accountId}/card/{cardNumber}")
-    @SecurityRequirement(name = API_KEY)
-    @Operation(description = "Need accountId + card number and password, that was used for creating accountId-> return list of transactions by card number")
-    public ResponseEntity<List<Transaction>> getAllByAccountIdAndAmountOfMoneyLessThan(@RequestParam Integer accountId, @RequestParam String cardNumber, @RequestParam String password) {
-        return ResponseEntity.ok(transactionService.getAllByAccountIdAndCardNumber(accountId, cardNumber, password));
-    }
-
-    @GetMapping(path = "/{accountId}/{id}")
-    @SecurityRequirement(name = API_KEY)
-    @Operation(description = "Need accountId and id of Transaction, and password, that was used for creating accountId-> return transaction by id or null if invalid password")
-    public ResponseEntity<Transaction> getByAccountIdAndId(@RequestParam Integer accountId, @RequestParam Integer id, @RequestParam String password) {
-        return ResponseEntity.ok(transactionService.getByAccountIdAndId(accountId, id, password));
-    }
-
-    @PutMapping(path = "/{accountId}")
-    @SecurityRequirement(name = API_KEY)
-    @Operation(description = "Put your transaction into account using password and query -> return ID")
-    public ResponseEntity<Integer> doTransaction(@RequestBody Transaction transaction, @RequestParam String password) {
-        return ResponseEntity.accepted().body(transactionService.doTransaction(transaction, password));
-    }
 }

@@ -5,17 +5,14 @@ import com.oleynikovee.atm.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.oleynikovee.atm.config.Constants.API_KEY;
-import static org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasRole;
 
 @RestController
 @RequestMapping("/user")
@@ -28,14 +25,14 @@ public class UserController {
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Adds a new user to the system. Password should be set for new user!")
     @Secured("ADMIN")
-    public ResponseEntity<Integer> addUser(@RequestBody User user) {
+    public ResponseEntity<Long> addUser(@RequestBody User user) {
         return ResponseEntity.accepted().body(userService.addUser(user));
     }
 
     @GetMapping(path = "/{userId}")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Retrieves a user by id")
-    public ResponseEntity<User> getUser(@PathVariable("userId") Integer userId) {
+    public ResponseEntity<User> getUser(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
@@ -49,7 +46,7 @@ public class UserController {
     @DeleteMapping(value = "/{userId}")
     @SecurityRequirement(name = API_KEY)
     @Operation(description = "Deletes a user by id")
-    ResponseEntity<Void> deleteUser(@PathVariable("userId") Integer userId) {
+    ResponseEntity<Void> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

@@ -22,7 +22,7 @@ public class UserPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+        authorities.add(new SimpleGrantedAuthority(user.getUserRole().name()));
         return authorities;
     }
 
@@ -35,6 +35,9 @@ public class UserPrincipal implements UserDetails {
     public String getUsername() {
         return user.getLogin();
     }
+
+
+    public Long getUserId(){return user.getId();}
 
     @Override
     public boolean isAccountNonExpired() {
@@ -61,12 +64,12 @@ public class UserPrincipal implements UserDetails {
         return isRole(UserRole.ADMIN);
     }
 
-    public boolean isVolunteer(){
+    public boolean isUser(){
         return isRole(UserRole.USER);
     }
 
     private boolean isRole(UserRole role){
-        return this.getUser().getRole()==role;
+        return this.getUser().getUserRole()==role;
     }
 
 }

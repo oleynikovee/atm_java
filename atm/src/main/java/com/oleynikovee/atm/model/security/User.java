@@ -1,13 +1,16 @@
 package com.oleynikovee.atm.model.security;
 
+import com.oleynikovee.atm.model.Account;
+import com.oleynikovee.atm.repo.domain.AccountEntity;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class User {
-    private Integer id;
-    private Integer amountOfMoney;
+    private Long id;
     private String login;
     private String password;
-    private String cardNumber;
-    private UserRole role;
+    private Account account;
+    private UserRole userRole   ;
 }

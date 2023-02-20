@@ -4,14 +4,25 @@ import com.oleynikovee.atm.model.security.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class UserEntity {
     @Id
-    private Integer id;
-    private Integer amountOfMoney;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "login", unique = true)
     private String login;
+
+    @Column(name = "password")
     private String password;
-    private String cardNumber;
-    private UserRole role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id")
+    private AccountEntity account;
+
+    private UserRole userRole;
 }

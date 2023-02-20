@@ -4,11 +4,12 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+
 @Data
 public class Transaction {
-    private Integer id;
-    private Integer accountId;
-    private Integer amountOfMoney;
-    private String cardNumber;
+    private Long id;
+    private Double amount;
+    private Account fromAccount;
+    private Account toAccount;
     private LocalDateTime date;
 }

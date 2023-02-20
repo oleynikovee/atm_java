@@ -1,5 +1,6 @@
 package com.oleynikovee.atm;
 
+import com.oleynikovee.atm.model.Account;
 import com.oleynikovee.atm.model.error.ApplicationException;
 import com.oleynikovee.atm.model.security.User;
 import com.oleynikovee.atm.model.security.UserRole;
@@ -36,21 +37,23 @@ public class AtmApplication implements ApplicationListener<ApplicationReadyEvent
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.info("APP STARTED!");
 
-        addTestUser(0, "admin");
-        addTestUser(1, "test");
+        addTestUser(0L, "admin");
+        addTestUser(2L, "test");
     }
 
-    private void addTestUser(int id, String login) {
+    private void addTestUser(Long id, String login) {
         try {
             userService.getUserById(id);
             log.info("Admin is present, skip creating one");
         } catch (ApplicationException e) {
             User user = new User();
+            Account account=new Account();
+            account.setBalance(23567.27);
             user.setId(id);
-            user.setRole(login.equals("admin") ? UserRole.ADMIN : UserRole.USER);
+            user.setUserRole(login.equals("admin") ? UserRole.ADMIN : UserRole.USER);
             user.setLogin(login);
             user.setPassword(login);
-            user.setAmountOfMoney(2312234);
+            user.setAccount(account);
             userService.addUser(user);
             log.info(login.toUpperCase() + " user added");
         }
