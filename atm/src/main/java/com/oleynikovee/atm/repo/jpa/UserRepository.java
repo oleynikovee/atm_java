@@ -8,11 +8,14 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<UserEntity, Integer> {
     boolean existsById(Long id);
+
     void deleteById(Long id);
+
     Optional<UserEntity> findById(Long Id);
 
     List<UserEntity> getAllBy();
 
     Optional<UserEntity> findByLogin(String login);
 
+    Optional<UserEntity> findUserEntityByAccountId(Long accountId);
 }

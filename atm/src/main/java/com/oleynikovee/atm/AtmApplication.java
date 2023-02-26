@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 
-
-
 import static com.oleynikovee.atm.config.Constants.API_KEY;
 
 @Slf4j
@@ -29,6 +27,7 @@ public class AtmApplication implements ApplicationListener<ApplicationReadyEvent
     public AtmApplication(UserService userService) {
         this.userService = userService;
     }
+
     public static void main(String[] args) {
         SpringApplication.run(AtmApplication.class, args);
     }
@@ -47,7 +46,7 @@ public class AtmApplication implements ApplicationListener<ApplicationReadyEvent
             log.info("Admin is present, skip creating one");
         } catch (ApplicationException e) {
             User user = new User();
-            Account account=new Account();
+            Account account = new Account();
             account.setBalance(23567.27);
             user.setId(id);
             user.setUserRole(login.equals("admin") ? UserRole.ADMIN : UserRole.USER);

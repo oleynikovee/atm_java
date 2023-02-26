@@ -1,7 +1,5 @@
 package com.oleynikovee.atm.repo.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,17 +15,15 @@ public class TransactionEntity {
     private Long id;
 
     private Double amount;
-    @JsonIgnoreProperties("transactions")
-    @ManyToOne
-    @JoinColumn(name = "from_account_id")
-    private AccountEntity fromAccount;
 
-    @JsonIgnoreProperties("transactions")
-    @ManyToOne
-    @JoinColumn(name = "to_account_id")
-    private AccountEntity toAccount;
+    private Long fromCardNumber;
+
+    private Long toCardNumber;
+    private String type;
 
     private LocalDateTime date;
+
+    private String transactionContext;
 
     @PrePersist
     public void setDate() {

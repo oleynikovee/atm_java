@@ -1,10 +1,10 @@
 package com.oleynikovee.atm.repo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Random;
+
 @Data
 @Entity
 @Table(name = "accounts")
@@ -16,9 +16,8 @@ public class AccountEntity {
     @Column(name = "balance")
     private Double balance;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "fromAccount")
-    @JsonIgnoreProperties("transactions")
-    private List<TransactionEntity> transactions;
+    @Column(name = "cardNumber")
+    private Long cardNumber;
 
     public void deposit(Double amount) {
         balance += amount;
@@ -30,5 +29,15 @@ public class AccountEntity {
         } else {
             throw new RuntimeException("Insufficient funds.");
         }
+    }
+
+    public Long generateCreditCardNumber() {
+        Random random = new Random();
+        String cardNumber = "5";
+        for (int i = 0; i < 15; i++) {
+            int digit = random.nextInt(10);
+            cardNumber += digit;
+        }
+        return Long.parseLong(cardNumber);
     }
 }

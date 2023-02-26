@@ -5,6 +5,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface TransactionRepository extends CrudRepository<TransactionEntity,Integer> {
-    List<TransactionEntity> findByFromAccountIdOrToAccountId(Long fromAccountId, Long toAccountId);
+public interface TransactionRepository extends CrudRepository<TransactionEntity, Integer> {
+    List<TransactionEntity> findByFromCardNumberAndToCardNumber(Long fromCardNumber, Long toCardNumber);
+
+    List<TransactionEntity> findByType(String type);
+
+    List<TransactionEntity> getAllByFromCardNumber(Long fromCardNumber);
 }

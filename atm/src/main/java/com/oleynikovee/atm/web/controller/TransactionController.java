@@ -8,7 +8,6 @@ import com.oleynikovee.atm.service.TransactionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +20,7 @@ import static com.oleynikovee.atm.config.Constants.API_KEY;
 public class TransactionController {
     private final TransactionService transactionService;
     private final UserPrincipal loggedUser;
+
     @SecurityRequirement(name = API_KEY)
     @PostMapping("/withdraw")
     public String withdraw(@RequestBody WithdrawRequest request) {
@@ -36,8 +36,9 @@ public class TransactionController {
     @SecurityRequirement(name = API_KEY)
     @PostMapping("/transfer")
     public String transfer(@RequestBody TransferRequest request) {
-        return transactionService.transfer(loggedUser.getUserId(), request.getToUserId(), request.getAmount());
+        return transactionService.transfer(loggedUser.getUserId(), request.getToCardNumber(), request.getAmount());
     }
+
     @SecurityRequirement(name = API_KEY)
     @GetMapping("/balance")
     public ResponseEntity<Double> getBalance() {
